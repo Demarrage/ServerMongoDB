@@ -27,7 +27,10 @@ const Cliente = mongoose.model("Cliente", tabela);
 // rotas para a aplicação
 // GET
 app.get("/", (req, res) => {
-  res.send("voce esta no metodo GET");
+  Cliente.find((erro, dados) => {
+    if (erro) console.error(`Erro ao tentar listar os clientes ${erro}`);
+    res.status(200).send({ saida: dados });
+  });
 });
 // POST
 app.post("/cadastro", (req, res) => {
@@ -42,8 +45,11 @@ app.put("/atualizar", (req, res) => {
   res.send("voce esta no metodo PUT");
 });
 // DELETE
-app.delete("/apagar", (req, res) => {
-  res.send("voce esta no metodo DELETE");
+app.delete("/apagar/:id", (req, res) => {
+  Cliente.findByIdAndDelete(req.params.id, (erro, dados) => {
+    if (erro) console.error(`Erro ao tentar apagar ${erro}`);
+    res.status(200).send({ resultado: "Apagado" });
+  });
 });
 app.listen(4505);
 console.log("Servidor Online...");
